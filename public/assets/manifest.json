@@ -1,0 +1,47 @@
+{
+  "bundles": [
+    {
+      "name": "home",
+      "assets": [
+        {
+          "alias": "home.background",
+          "src": "assets/homeScene/backgrounds/home.background.webp"
+        },
+        {
+          "alias": "home.play",
+          "src": "assets/homeScene/buttons/home.play.png"
+        },
+        {
+          "alias": "home.boom",
+          "src": "assets/homeScene/effects/home.boom.png"
+        }
+      ]
+    },
+    {
+      "name": "game",
+      "assets": [
+        {
+          "alias": "game.background",
+          "src": "assets/gameScene/backgrounds/game.background.webp"
+        },
+        {
+          "alias": "game.exit",
+          "src": "assets/gameScene/buttons/game.exit.png"
+        },
+        {
+          "alias": "game.shapes",
+          "src": "assets/gameScene/sprites/game.shapes.json"
+        }
+      ]
+    },
+    {
+      "name": "loader",
+      "assets": [
+        {
+          "alias": "loading.background",
+          "src": "assets/loadingScene/backgrounds/loading.background.webp"
+        }
+      ]
+    }
+  ]
+}

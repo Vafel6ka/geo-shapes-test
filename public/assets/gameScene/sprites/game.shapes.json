@@ -1,0 +1,134 @@
+{
+  "frames": {
+    "pentagon": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 220,
+        "h": 156
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 220,
+        "h": 156
+      },
+      "sourceSize": {
+        "w": 220,
+        "h": 156
+      }
+    },
+    "triangle": {
+      "frame": {
+        "x": 220,
+        "y": 0,
+        "w": 220,
+        "h": 156
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 220,
+        "h": 156
+      },
+      "sourceSize": {
+        "w": 220,
+        "h": 156
+      }
+    },
+    "square": {
+      "frame": {
+        "x": 440,
+        "y": 0,
+        "w": 220,
+        "h": 156
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 220,
+        "h": 156
+      },
+      "sourceSize": {
+        "w": 220,
+        "h": 156
+      }
+    },
+    "hexagon": {
+      "frame": {
+        "x": 660,
+        "y": 0,
+        "w": 220,
+        "h": 156
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 220,
+        "h": 156
+      },
+      "sourceSize": {
+        "w": 220,
+        "h": 156
+      }
+    },
+    "circle": {
+      "frame": {
+        "x": 0,
+        "y": 156,
+        "w": 220,
+        "h": 156
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 220,
+        "h": 156
+      },
+      "sourceSize": {
+        "w": 220,
+        "h": 156
+      }
+    },
+    "ellipse": {
+      "frame": {
+        "x": 220,
+        "y": 156,
+        "w": 220,
+        "h": 156
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 220,
+        "h": 156
+      },
+      "sourceSize": {
+        "w": 220,
+        "h": 156
+      }
+    }
+  },
+  "meta": {
+    "app": "geo_shape_boom",
+    "image": "game.shapes.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 880,
+      "h": 312
+    },
+    "scale": "1"
+  }
+}
