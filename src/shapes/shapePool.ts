@@ -4,22 +4,37 @@ export class ShapePool {
   private pool: Sprite[] = [];
 
   get(texture: Texture): Sprite {
-    const sprite = this.pool.pop() ?? new Sprite(texture);
+    let sprite = this.pool.pop();
+
+    if (!sprite) {
+      sprite = new Sprite(texture);
+    }
 
     sprite.texture = texture;
     sprite.visible = true;
-
     sprite.eventMode = "static";
-    sprite.cursor = "pointer";
+
+    sprite.anchor?.set?.(0.5);
+
+    sprite.position.set(0, 0);
+    sprite.rotation = 0;
+    sprite.scale.set(1);
 
     return sprite;
   }
 
   release(sprite: Sprite) {
-    sprite.visible = false;
     sprite.removeAllListeners();
+
     sprite.parent?.removeChild(sprite);
 
+    sprite.visible = false;
+    sprite.eventMode = "none";
+
     this.pool.push(sprite);
+  }
+
+  clear() {
+    this.pool.length = 0;
   }
 }

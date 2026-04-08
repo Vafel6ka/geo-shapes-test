@@ -23,9 +23,12 @@ export class MainShapeLayer extends Container {
   private pool!: ShapePool;
 
   private spawnTimer = 0;
+  private debugTimer = 0;
 
-  public innerW!: number;
-  public innerH!: number;
+  private isDestroyed = false;
+
+  private innerW: number = 0;
+  private innerH: number = 0;
 
   init(sheet: Spritesheet) {
     this.innerW = mainShapeLayerConfig.mask.width;
@@ -34,9 +37,6 @@ export class MainShapeLayer extends Container {
     const maskX = (mainShapeLayerConfig.frame.width - this.innerW) / 2;
     const maskY = (mainShapeLayerConfig.frame.height - this.innerH) / 2;
 
-    // =========================
-    // FRAME
-    // =========================
     this.frame = new Graphics()
       .rect(
         0,
@@ -48,25 +48,16 @@ export class MainShapeLayer extends Container {
 
     this.addChild(this.frame);
 
-    // =========================
-    // CONTENT
-    // =========================
     this.content = new Container();
     this.content.position.set(maskX, maskY);
     this.addChild(this.content);
 
-    // =========================
-    // BG
-    // =========================
     this.bg = new Graphics()
       .rect(0, 0, this.innerW, this.innerH)
       .fill(colors.black);
 
     this.content.addChild(this.bg);
 
-    // =========================
-    // MASK (FIXED)
-    // =========================
     this.maskShape = new Graphics()
       .rect(0, 0, this.innerW, this.innerH)
       .fill(0xffffff);
@@ -74,24 +65,15 @@ export class MainShapeLayer extends Container {
     this.content.addChild(this.maskShape);
     this.content.mask = this.maskShape;
 
-    // =========================
-    // SYSTEM
-    // =========================
     this.pool = new ShapePool();
 
     const factory = new ShapeFactory(sheet.textures);
+
     this.system = new ShapeSystem(this.content, factory, this.pool);
 
-    // =========================
-    // INPUT OVERLAY
-    // =========================
     this.overlay = new InputOverlay(this);
-    this.overlay.position.set(0, 0);
     this.content.addChild(this.overlay);
 
-    // =========================
-    // CONTROLS (FIXED - NOW INCLUDED)
-    // =========================
     this.controls = new ControlsPanel();
     this.controls.init();
 
@@ -100,28 +82,25 @@ export class MainShapeLayer extends Container {
     this.addChild(this.controls);
   }
 
-  // =========================
-  // GETTERS
-  // =========================
-  get innerWidth() {
+  public get innerWidth(): number {
     return this.innerW;
   }
 
-  get innerHeight() {
+  public get innerHeight(): number {
     return this.innerH;
   }
 
-  // =========================
-  // SPAWN
-  // =========================
-  spawn(x: number, y: number) {
+  public spawn(x: number, y: number) {
     this.system.spawn(x, y);
   }
 
-  // =========================
-  // UPDATE
-  // =========================
+  public getContent(): Container {
+    return this.content;
+  }
+
   update(deltaMS: number) {
+    if (this.isDestroyed) return;
+
     this.system.update(deltaMS);
 
     this.spawnTimer += deltaMS;
@@ -133,9 +112,31 @@ export class MainShapeLayer extends Container {
 
       this.system.spawn(Math.random() * this.innerW, -50);
     }
+
+    this.debugTimer += deltaMS;
+
+    if (this.debugTimer > 2000) {
+      this.debugTimer = 0;
+
+      console.log("shapes:", this.system.count);
+    }
   }
 
-  getContent() {
-    return this.content;
+  destroy() {
+    this.isDestroyed = true;
+
+    this.system?.destroy();
+
+    this.removeAllListeners();
+    this.removeChildren();
+
+    this.content?.destroy({ children: true });
+
+    this.pool?.clear();
+
+    this.pool = null as any;
+    this.system = null as any;
+    this.overlay = null as any;
+    this.controls = null as any;
   }
 }

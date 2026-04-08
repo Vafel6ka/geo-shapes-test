@@ -1,17 +1,13 @@
-import { Sprite, Texture } from "pixi.js";
+import { Texture } from "pixi.js";
 
 export class ShapeFactory {
-  private textures: Record<string, Texture>;
+  private textures: Texture[];
 
   constructor(textures: Record<string, Texture>) {
-    this.textures = textures;
+    this.textures = Object.values(textures);
   }
 
-  create(): Sprite {
-    const keys = Object.keys(this.textures);
-
-    const key = keys[Math.floor(Math.random() * keys.length)];
-
-    return new Sprite(this.textures[key]);
+  getRandomTexture(): Texture {
+    return this.textures[(Math.random() * this.textures.length) | 0];
   }
 }
