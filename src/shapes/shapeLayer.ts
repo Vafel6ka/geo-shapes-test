@@ -46,7 +46,7 @@ export class MainShapeLayer extends Container {
         mainShapeLayerConfig.frame.width,
         mainShapeLayerConfig.frame.height,
       )
-      .stroke({ width: 2, color: colors.blue.darker });
+      .stroke({ width: 8, color: colors.orange.dark });
 
     this.addChild(this.frame);
 
@@ -84,8 +84,8 @@ export class MainShapeLayer extends Container {
     this.addChild(this.controls);
 
     this.infoPanel = new InfoPanel();
-    this.infoPanel.init(this);
-    this.infoPanel.position.set(110, 60);
+    this.infoPanel.init();
+    this.infoPanel.position.set(220, 60);
     this.addChild(this.infoPanel);
   }
 

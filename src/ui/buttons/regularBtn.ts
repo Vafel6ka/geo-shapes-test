@@ -22,7 +22,7 @@ export class RegularButton extends Container {
     this.border.roundRect(0, 0, width, height, radius);
     this.border.stroke({
       width: borderWidth,
-      color: colors.gray,
+      color: colors.orange.dark,
     });
 
     this.addChild(this.border);
@@ -43,7 +43,7 @@ export class RegularButton extends Container {
     // LABEL
     // =========================
     const style = new TextStyle({
-      fill: colors.gray,
+      fill: colors.orange.dark,
       fontSize: 28,
       fontFamily: "GameMenuFont",
       fontWeight: "bold",

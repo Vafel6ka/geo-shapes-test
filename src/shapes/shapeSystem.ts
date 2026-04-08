@@ -4,8 +4,12 @@ import { ShapeFactory } from "./shapeFactory";
 import { rootStore } from "../store/rooteStore";
 import { eventBus } from "../core/eventBus";
 import { mainShapeLayerConfig } from "./shape.config";
+import { SHAPE_AREA } from "./shape.config";
+import type { ShapeType } from "../common/types";
 
 type ShapeObj = {
+  id: string;
+  type: ShapeType;
   sprite: Sprite;
   vx: number;
   vy: number;
@@ -21,32 +25,35 @@ export class ShapeSystem {
   private gravity = rootStore.physics.getGravity();
   private destroyed = false;
 
-  private onGravityChange = ({ gravity }: { gravity: number }) => {
-    this.gravity = gravity;
-  };
-
   constructor(container: Container, factory: ShapeFactory, pool: ShapePool) {
     this.container = container;
     this.factory = factory;
     this.pool = pool;
 
-    eventBus.on("PHYSICS_GRAVITY_CHANGED", this.onGravityChange);
+    eventBus.on("PHYSICS_GRAVITY_CHANGED", ({ gravity }) => {
+      this.gravity = gravity;
+    });
   }
 
   spawn(x: number, y: number) {
     if (this.destroyed) return;
 
-    const texture = this.factory.getRandomTexture();
+    const type = this.factory.getRandomType();
+    const texture = this.factory.getTextureByType(type);
     const sprite = this.pool.get(texture);
 
-    sprite.position.set(x, y);
-    sprite.eventMode = "static";
+    const id = crypto.randomUUID();
 
     const obj: ShapeObj = {
+      id,
+      type,
       sprite,
       vx: 0,
       vy: 0,
     };
+
+    sprite.position.set(x, y);
+    sprite.eventMode = "static";
 
     sprite.on("pointertap", () => {
       this.removeShape(obj);
@@ -54,18 +61,26 @@ export class ShapeSystem {
 
     this.container.addChild(sprite);
     this.shapes.push(obj);
+
+    // =========================
+    // 🔥 STORE UPDATE HERE
+    // =========================
+    rootStore.shapes.addShape({
+      id,
+      type,
+      x,
+      y,
+      area: SHAPE_AREA[type as keyof typeof SHAPE_AREA],
+    });
   }
 
   private removeShape(obj: ShapeObj) {
-    const sprite = obj.sprite;
+    obj.sprite.removeAllListeners();
+    this.pool.release(obj.sprite);
 
-    sprite.removeAllListeners();
-    this.pool.release(sprite);
+    this.shapes = this.shapes.filter((s) => s.id !== obj.id);
 
-    const index = this.shapes.indexOf(obj);
-    if (index !== -1) {
-      this.shapes.splice(index, 1);
-    }
+    rootStore.shapes.removeShape(obj.id);
   }
 
   update(deltaMS: number) {
@@ -73,9 +88,7 @@ export class ShapeSystem {
 
     const dt = deltaMS / 1000;
 
-    for (let i = this.shapes.length - 1; i >= 0; i--) {
-      const s = this.shapes[i];
-
+    for (const s of this.shapes) {
       s.vy += this.gravity * dt;
       s.sprite.y += s.vy * dt;
 
@@ -85,19 +98,12 @@ export class ShapeSystem {
     }
   }
 
-  get count(): number {
+  get count() {
     return this.shapes.length;
   }
 
   destroy() {
     this.destroyed = true;
-
-    eventBus.off("PHYSICS_GRAVITY_CHANGED", this.onGravityChange);
-
-    for (const s of this.shapes) {
-      this.pool.release(s.sprite);
-    }
-
     this.shapes.length = 0;
   }
 }

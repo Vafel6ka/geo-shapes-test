@@ -10,7 +10,8 @@ export class ShapesStore extends Store<typeof initialShapesState> {
 
   private recalc(shapes: any[]) {
     const shapesNumber = shapes.length;
-    const occupiedArea = shapes.reduce((sum, s) => sum + s.area, 0);
+
+    const occupiedArea = shapes.reduce((sum, s) => sum + (s.area ?? 0), 0);
 
     this.setState({
       shapes,
@@ -48,8 +49,6 @@ export class ShapesStore extends Store<typeof initialShapesState> {
   }
 
   clear() {
-    eventBus.emit("SHAPES_CLEARED", {});
-
     this.recalc([]);
   }
 }

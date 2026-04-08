@@ -1,41 +1,33 @@
 import { Container } from "pixi.js";
-import type { MainShapeLayer } from "../shapes/shapeLayer";
 import { RegularText } from "../ui/Text";
+import { rootStore } from "../store/rooteStore";
 
 export class InfoPanel extends Container {
   private shapesText!: RegularText;
-  private layer!: MainShapeLayer;
+  private unsubscribe?: () => void;
 
-  private rafId = 0;
-
-  init(layer: MainShapeLayer) {
-    this.layer = layer;
-
-    // =========================
-    // SHAPES COUNTER (LIVE)
-    // =========================
+  init() {
     this.shapesText = new RegularText("shapes: 0", 28);
-
-    this.shapesText.position.set(0, 0);
-
     this.addChild(this.shapesText);
 
-    // start loop
-    this.start();
+    this.unsubscribe = rootStore.shapes.subscribe((state) => {
+      this.shapesText.setText(
+        `shapes: ${state.shapesNumber} area: ${state.occupiedArea}`,
+      );
+    });
+
+    this.sync();
   }
 
-  private start() {
-    const update = () => {
-      this.shapesText.setText(`shapes: ${this.layer.shapeCount}`);
-
-      this.rafId = requestAnimationFrame(update);
-    };
-
-    update();
+  private sync() {
+    const state = rootStore.shapes.getState();
+    this.shapesText.setText(
+      `shapes: ${state.shapesNumber} | area: ${state.occupiedArea}`,
+    );
   }
 
   destroy() {
-    cancelAnimationFrame(this.rafId);
+    this.unsubscribe?.();
     super.destroy();
   }
 }
