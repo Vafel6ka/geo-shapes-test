@@ -3,6 +3,7 @@ import { ShapePool } from "./shapePool";
 import { ShapeFactory } from "./shapeFactory";
 import { rootStore } from "../store/rooteStore";
 import { eventBus } from "../core/eventBus";
+import { mainShapeLayerConfig } from "./shape.config";
 
 type ShapeObj = {
   sprite: Sprite;
@@ -78,7 +79,7 @@ export class ShapeSystem {
       s.vy += this.gravity * dt;
       s.sprite.y += s.vy * dt;
 
-      if (s.sprite.y > 2000) {
+      if (s.sprite.y > mainShapeLayerConfig.mask.height + 50) {
         this.removeShape(s);
       }
     }

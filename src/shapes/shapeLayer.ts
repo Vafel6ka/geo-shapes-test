@@ -62,7 +62,7 @@ export class MainShapeLayer extends Container {
 
     this.maskShape = new Graphics()
       .rect(0, 0, this.innerW, this.innerH)
-      .fill(0xffffff);
+      .fill(colors.white);
 
     this.content.addChild(this.maskShape);
     this.content.mask = this.maskShape;
