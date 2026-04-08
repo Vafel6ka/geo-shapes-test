@@ -1,10 +1,14 @@
 import { Container } from "pixi.js";
 import { RegularButton } from "../ui/buttons/regularBtn";
 import { rootStore } from "../store/rooteStore";
+import { RegularText } from "../ui/Text";
 
 export class ControlsPanel extends Container {
+  private gravityValue!: RegularText;
+  private spawnValue!: RegularText;
+
   init() {
-    const gap = 20;
+    const gapX = 20;
 
     // =========================
     // GRAVITY +
@@ -12,6 +16,7 @@ export class ControlsPanel extends Container {
     const incGravity = new RegularButton();
     incGravity.init("Gravity +", 140, 60, () => {
       rootStore.physics.increaseGravity();
+      this.sync();
     });
 
     // =========================
@@ -20,6 +25,7 @@ export class ControlsPanel extends Container {
     const decGravity = new RegularButton();
     decGravity.init("Gravity -", 140, 60, () => {
       rootStore.physics.decreaseGravity();
+      this.sync();
     });
 
     // =========================
@@ -28,6 +34,7 @@ export class ControlsPanel extends Container {
     const incSpawn = new RegularButton();
     incSpawn.init("Shapes +", 140, 60, () => {
       rootStore.physics.increaseSpawnRate(1);
+      this.sync();
     });
 
     // =========================
@@ -36,17 +43,58 @@ export class ControlsPanel extends Container {
     const decSpawn = new RegularButton();
     decSpawn.init("Shapes -", 140, 60, () => {
       rootStore.physics.decreaseSpawnRate(1);
+      this.sync();
     });
+
+    // =========================
+    // VALUE TEXTS (LIVE STATE)
+    // =========================
+    this.gravityValue = new RegularText(
+      `Gravity: ${rootStore.physics.getGravity().toFixed(2)}`,
+      28,
+    );
+
+    this.spawnValue = new RegularText(
+      `Spawn: ${rootStore.physics.getSpawnPerSecond().toFixed(1)}/s`,
+      28,
+    );
 
     // =========================
     // LAYOUT
     // =========================
-    incGravity.position.set(0, 0);
-    decGravity.position.set(160, 0);
 
-    incSpawn.position.set(320, 0);
-    decSpawn.position.set(480, 0);
+    // GRAVITY BLOCK
+    incGravity.position.set(50, 0);
+    decGravity.position.set(210, 0);
 
-    this.addChild(incGravity, decGravity, incSpawn, decSpawn);
+    // SPAWN BLOCK
+    incSpawn.position.set(370, 0);
+    decSpawn.position.set(530, 0);
+
+    //Value Block
+    this.gravityValue.position.set(840, 25);
+    this.spawnValue.position.set(820, 50);
+
+    this.addChild(
+      incGravity,
+      decGravity,
+      incSpawn,
+      decSpawn,
+      this.gravityValue,
+      this.spawnValue,
+    );
+
+    // initial sync
+    this.sync();
+  }
+
+  private sync() {
+    this.gravityValue.setText(
+      `Gravity: ${rootStore.physics.getGravity().toFixed(2)}`,
+    );
+
+    this.spawnValue.setText(
+      `Spawn: ${rootStore.physics.getSpawnPerSecond().toFixed(1)}/s`,
+    );
   }
 }

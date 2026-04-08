@@ -8,6 +8,7 @@ import { ShapePool } from "./shapePool";
 import { ShapeSystem } from "./shapeSystem";
 import { InputOverlay } from "./inputOverlay";
 import { rootStore } from "../store/rooteStore";
+import { InfoPanel } from "./infoPanel";
 
 export class MainShapeLayer extends Container {
   private frame!: Graphics;
@@ -19,6 +20,7 @@ export class MainShapeLayer extends Container {
   private system!: ShapeSystem;
   private overlay!: InputOverlay;
   private controls!: ControlsPanel;
+  private infoPanel!: InfoPanel;
 
   private pool!: ShapePool;
 
@@ -80,6 +82,15 @@ export class MainShapeLayer extends Container {
     this.controls.position.set(0, mainShapeLayerConfig.frame.height - 80);
 
     this.addChild(this.controls);
+
+    this.infoPanel = new InfoPanel();
+    this.infoPanel.init(this);
+    this.infoPanel.position.set(110, 60);
+    this.addChild(this.infoPanel);
+  }
+
+  public get shapeCount(): number {
+    return this.system.count;
   }
 
   public get innerWidth(): number {

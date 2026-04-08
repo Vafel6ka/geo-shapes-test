@@ -59,5 +59,5 @@ export type PhysicsState = {
 
 export const initialPhysicsState: PhysicsState = {
   gravity: 200,
-  spawnPerSecond: 0.5,
+  spawnPerSecond: 1,
 };

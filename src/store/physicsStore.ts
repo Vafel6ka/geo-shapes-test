@@ -37,7 +37,7 @@ export class PhysicsStore extends Store<typeof initialPhysicsState> {
   // =========================
   // SPAWN RATE
   // =========================
-  increaseSpawnRate(step = 0.1) {
+  increaseSpawnRate(step = 1) {
     const spawnPerSecond = this.getState().spawnPerSecond + step;
 
     this.setState({ spawnPerSecond });
@@ -45,7 +45,7 @@ export class PhysicsStore extends Store<typeof initialPhysicsState> {
     eventBus.emit("PHYSICS_SPAWN_CHANGED", { spawnPerSecond });
   }
 
-  decreaseSpawnRate(step = 0.1) {
+  decreaseSpawnRate(step = 1) {
     const spawnPerSecond = Math.max(0, this.getState().spawnPerSecond - step);
     this.setState({ spawnPerSecond });
     eventBus.emit("PHYSICS_SPAWN_CHANGED", { spawnPerSecond });

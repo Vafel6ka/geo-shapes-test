@@ -1,4 +1,4 @@
-import { Container, Point, Sprite } from "pixi.js";
+import { Container, Sprite } from "pixi.js";
 import { ShapePool } from "./shapePool";
 import { ShapeFactory } from "./shapeFactory";
 import { rootStore } from "../store/rooteStore";
@@ -78,7 +78,6 @@ export class ShapeSystem {
       s.vy += this.gravity * dt;
       s.sprite.y += s.vy * dt;
 
-      // ❗ AUTO REMOVE OFF SCREEN (ВАЖЛИВО)
       if (s.sprite.y > 2000) {
         this.removeShape(s);
       }
