@@ -6,6 +6,11 @@ export class RegularButton extends Container {
   private border!: Graphics;
   private currentLabel!: Text;
 
+  private baseScale = 1;
+  private targetScale = 1;
+
+  private isPressed = false;
+
   init(text: string, width = 180, height = 60, onClick?: () => void) {
     const radius = 12;
     const borderWidth = 4;
@@ -56,16 +61,51 @@ export class RegularButton extends Container {
     });
 
     this.currentLabel.anchor.set(0.5);
-    this.currentLabel.position.set(width / 2, height / 2);
+    this.currentLabel.position.set(width / 2, height / 2 + 5);
 
     this.addChild(this.currentLabel);
 
     // =========================
-    // CLICK
+    // INTERACTION
     // =========================
-    this.bg.on("pointertap", (e) => {
-      e.stopPropagation();
+    this.bg.on("pointerover", () => {
+      this.targetScale = 1.05;
+    });
+
+    this.bg.on("pointerout", () => {
+      this.targetScale = 1;
+      this.isPressed = false;
+    });
+
+    this.bg.on("pointerdown", () => {
+      this.isPressed = true;
+      this.targetScale = 0.95;
+    });
+
+    this.bg.on("pointerup", () => {
+      this.isPressed = false;
+      this.targetScale = 1.05;
       onClick?.();
     });
+
+    this.bg.on("pointerupoutside", () => {
+      this.isPressed = false;
+      this.targetScale = 1;
+    });
+
+    // start animation loop
+    this.animate();
   }
+
+  // =========================
+  // SMOOTH ANIMATION LOOP
+  // =========================
+  private animate = () => {
+    const speed = 0.15;
+
+    this.scale.x += (this.targetScale - this.scale.x) * speed;
+    this.scale.y += (this.targetScale - this.scale.y) * speed;
+
+    requestAnimationFrame(this.animate);
+  };
 }
